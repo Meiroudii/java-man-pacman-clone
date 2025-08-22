@@ -3,7 +3,7 @@
 # Variables
 JAVAC = javac
 JAVA = java
-MAIN = Main
+MAIN = App
 
 # Default target
 all: $(MAIN).class
