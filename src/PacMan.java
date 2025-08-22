@@ -81,6 +81,8 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
   PacMan() {
     setPreferredSize(new Dimension(board_width, board_height));
     setBackground(Color.BLACK);
+    addKeyListener(this);
+    setFocusable(true);
 
     wall_image = new ImageIcon(getClass().getResource("./wall.png")).getImage();
     blue_ghost_image = new ImageIcon(getClass().getResource("./blueGhost.png")).getImage();
@@ -171,8 +173,13 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
 
   @Override
   public void keyTyped(KeyEvent e) {}
+
   @Override
   public void keyPressed(KeyEvent e) {}
+  // good for holding a key, add booster?
+
   @Override
-  public void keyReleased(KeyEvent e) {}
+  public void keyReleased(KeyEvent e) {
+    System.out.println("KeyEvent: "+ e.getKeyCode());
+  }
 }
