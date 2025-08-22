@@ -55,8 +55,20 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
     }
 
     void updateDirection(char direction) {
+      char prev_direction = this.direction;
       this.direction = direction;
       updateVelocity();
+      this.x += this.velocity_x;
+      this.y += this.velocity_y;
+
+      for (Block wall : walls) {
+        if (collision(this, wall)) {
+          this.x -= this.velocity_x;
+          this.y -= this.velocity_y;
+          this.direction = prev_direction;
+          updateVelocity();
+        }
+      }
     }
 
     void updateVelocity() {
@@ -218,14 +230,28 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
   public void move() {
     pacman.x += pacman.velocity_x;
     pacman.y += pacman.velocity_y;
+
+    //check wal collisions
+    for (Block wall : walls) {
+      if (collision(pacman, wall)) {
+        pacman.x -= pacman.velocity_x;
+        pacman.y -= pacman.velocity_y;
+        break;
+      }
+    }
+  }
+
+  public boolean collision(Block a, Block b) {
+    return a.x < b.x + b.width &&
+           a.x + a.width > b.x &&
+           a.y < b.y + b.height &&
+           a.y + a.height > b.y;
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     move();
-    System.out.println("move has been moved");
     repaint();
-    System.out.println("has been repaint");
   }
 
   @Override
@@ -254,21 +280,22 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
       default:
         break;
     }
-    /*
-    if (e.getKeyCode() == KeyEvent.VK_UP) {
-      System.out.println(KeyEvent.VK_UP);
-      pacman.updateDirection('U');
-    } 
-    else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-      System.out.println(KeyEvent.VK_DOWN);
-      pacman.updateDirection('D');
+
+    switch(pacman.direction) {
+      case 'U':
+        pacman.image = pacman_up_image;
+        break;
+      case 'D':
+        pacman.image = pacman_down_image;
+        break;
+      case 'L':
+        pacman.image = pacman_left_image;
+        break;
+      case 'R':
+        pacman.image = pacman_right_image;
+        break;
+      default:
+        break;
     }
-    else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-      pacman.updateDirection('L');
-    }
-    else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-      pacman.updateDirection('R');
-    }
-    */
   }
 }
