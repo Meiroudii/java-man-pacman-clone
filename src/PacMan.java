@@ -70,26 +70,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
         }
       }
     }
-
     void updateVelocity() {
-      /*
-      if (this.direction == 'U') {
-        this.velocity_x = 0;
-        this.velocity_y = -tile_size/4;
-      }
-      else if (this.direction == 'D') {
-          this.velocity_x = 0;
-          this.velocity_y = tile_size/4;
-      }
-      else if (this.direction == 'L') {
-          this.velocity_x = -tile_size/4;
-          this.velocity_y = 0;
-      }
-      else if (this.direction == 'R') {
-          this.velocity_x = tile_size/4;
-          this.velocity_y = 0;
-      }
-      */
       switch (this.direction) {
         case 'U':
           this.velocity_x = 0;
@@ -111,6 +92,12 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
           break;
       }
     }
+
+    void reset() {
+      this.x = this.start_x;
+      this.y = this.start_y;
+    }
+
   }
 
   // TODO: Create separate file for these variables
@@ -257,7 +244,12 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
         break;
       }
     }
+    // check ghost collisions
     for (Block ghost : ghosts) {
+      if (collision(ghost, pacman)) {
+        lives -= 1;
+        resetPositions();
+      }
       if (ghost.y == tile_size*9 && ghost.direction != 'U' && ghost.direction != 'D') {
         ghost.updateDirection('U');
       }
@@ -299,11 +291,91 @@ public class PacMan extends JPanel implements ActionListener, KeyListener{
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {}
+  public void keyTyped(KeyEvent e) {
+    switch (e.getKeyCode()) {
+      case KeyEvent.VK_UP:
+        pacman.updateDirection('U');
+        break;
+      case KeyEvent.VK_DOWN:
+        pacman.updateDirection('D');
+        break;
+      case KeyEvent.VK_LEFT:
+        pacman.updateDirection('L');
+        break;
+      case KeyEvent.VK_RIGHT:
+        pacman.updateDirection('R');
+        break;
+      default:
+        break;
+    }
+
+    switch(pacman.direction) {
+      case 'U':
+        pacman.image = pacman_up_image;
+        break;
+      case 'D':
+        pacman.image = pacman_down_image;
+        break;
+      case 'L':
+        pacman.image = pacman_left_image;
+        break;
+      case 'R':
+        pacman.image = pacman_right_image;
+        break;
+      default:
+        break;
+    }
+  }
 
   @Override
-  public void keyPressed(KeyEvent e) {}
+  public void keyPressed(KeyEvent e) {
+    switch (e.getKeyCode()) {
+      case KeyEvent.VK_UP:
+        pacman.updateDirection('U');
+        break;
+      case KeyEvent.VK_DOWN:
+        pacman.updateDirection('D');
+        break;
+      case KeyEvent.VK_LEFT:
+        pacman.updateDirection('L');
+        break;
+      case KeyEvent.VK_RIGHT:
+        pacman.updateDirection('R');
+        break;
+      default:
+        break;
+    }
+
+    switch(pacman.direction) {
+      case 'U':
+        pacman.image = pacman_up_image;
+        break;
+      case 'D':
+        pacman.image = pacman_down_image;
+        break;
+      case 'L':
+        pacman.image = pacman_left_image;
+        break;
+      case 'R':
+        pacman.image = pacman_right_image;
+        break;
+      default:
+        break;
+    }
+  }
   // good for holding a key, add booster?
+  //
+
+  public void resetPositions() {
+    pacman.reset();
+    pacman.velocity_x = 0;
+    pacman.velocity_y = 0;
+    for (Block ghost: ghosts) {
+      ghost.reset();
+      char new_direction = direction[random.nextInt(4)];
+      ghost.updateDirection(new_direction);
+    }
+  }
 
   @Override
   public void keyReleased(KeyEvent e) {
